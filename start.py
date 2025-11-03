@@ -22,6 +22,8 @@ async def on_ready():
 
 # translate code
 @tree.command(name="translate", description="Translate into a diff lang")
+@app_commands.allowed_installs(guilds=True, users=True)
+@app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
 async def translate(interaction: discord.Interaction, lang: str, *, text: str):
     """
     Example:
@@ -30,7 +32,6 @@ async def translate(interaction: discord.Interaction, lang: str, *, text: str):
     now = datetime.now().strftime("%b %d, %Y %H:%M%p")
     user = interaction.user
     username = user.name
-    
     
     try:
         translated = GoogleTranslator(source="auto", target=lang).translate(text)
@@ -45,6 +46,8 @@ async def translate(interaction: discord.Interaction, lang: str, *, text: str):
         print(f"[{now}] ❌ {username} tried lang='{lang}'")
 #uploads 6 7 ¬‿¬
 @tree.command(name="sixseven", description = "6 7 uploader")
+@app_commands.allowed_installs(guilds=True, users=True)
+@app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
 async def image_six_seven(interaction: discord.Interaction):
     folder = "images"
     path = os.path.join(folder, "6 7.webp")
@@ -54,6 +57,8 @@ async def image_six_seven(interaction: discord.Interaction):
         await interaction.response.send_message(file=picture)
 #uploads speed laugh
 @tree.command(name="speed", description = "yoo")
+@app_commands.allowed_installs(guilds=True, users=True)
+@app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
 async def image_speed(interaction: discord.Interaction):
     folder = "images"
     path = os.path.join(folder, "image8.jpg")
@@ -63,6 +68,8 @@ async def image_speed(interaction: discord.Interaction):
         await interaction.response.send_message(file=picture)
 #uploads this guy
 @tree.command(name="good", description = "ez")
+@app_commands.allowed_installs(guilds=True, users=True)
+@app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
 async def image_good(interaction: discord.Interaction):
     folder = "images"
     path = os.path.join(folder, "good.jpg")
