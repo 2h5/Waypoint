@@ -79,12 +79,7 @@ async def image_good(interaction: discord.Interaction):
     with open(path, "rb") as f:
         picture = discord.File(f)
         await interaction.response.send_message(file=picture)
-
-
-
-
-
-
+# remind me code
 @tree.command(name="remindme", description="Set a reminder for yourself")
 @app_commands.allowed_installs(guilds=True, users=True)
 @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
@@ -94,8 +89,6 @@ async def remindme(interaction: discord.Interaction, time: str, *, text: str):
     /remindme time: 10m text: take out the trash
     Supported units: s (seconds), m (minutes), h (hours)
     """
-
-  
     match = re.match(r"^(\d+)([smh])$", time.lower())
     if not match:
         await interaction.response.send_message("Use format like `10m`, `2h`, or `30s`.")
@@ -105,12 +98,10 @@ async def remindme(interaction: discord.Interaction, time: str, *, text: str):
     value = int(value)
     seconds = value * {"s": 1, "m": 60, "h": 3600}[unit]
 
-    
     await interaction.response.send_message(
         f"{interaction.user.mention}, I'll remind you in {value}{unit}."
     )
 
-    
     await asyncio.sleep(seconds)
 
     try:
@@ -118,6 +109,5 @@ async def remindme(interaction: discord.Interaction, time: str, *, text: str):
     except discord.Forbidden:
         await interaction.followup.send(f"⏰ Reminder for {interaction.user.mention}: {text}")
         
-        
-#bot token down here :[] ur not allowed to see this if ur not me
+
 client.run("REDACTED")
