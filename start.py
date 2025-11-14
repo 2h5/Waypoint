@@ -110,4 +110,8 @@ async def remindme(interaction: discord.Interaction, time: str, *, text: str):
         await interaction.followup.send(f"⏰ Reminder for {interaction.user.mention}: {text}")
         
 
+#add link to url functionality?
+
+
+
 client.run("REDACTED")
