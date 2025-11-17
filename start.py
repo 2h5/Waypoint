@@ -110,8 +110,14 @@ async def remindme(interaction: discord.Interaction, time: str, *, text: str):
         await interaction.followup.send(f"⏰ Reminder for {interaction.user.mention}: {text}")
         
 
-#add link to url functionality?
+#add link to url functionality? on pause, this was a qrcode converter 
 
+
+#add map static image uploader #mapbox implementation. Type location, sends to endpoint, gives me url, parse json, upload to discord. If place is invalid, mapbox handles that and returns empty features []. 
+
+
+
+#add map directions from mapbox, directions here to there
 
 
 client.run("REDACTED")
