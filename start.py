@@ -61,7 +61,7 @@ async def translate(interaction: discord.Interaction, lang: str, *, text: str):
 @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
 async def image_six_seven(interaction: discord.Interaction):
     folder = "images"
-    path = os.path.join(folder, "6 7.webp")
+    path = os.path.join(folder, "IMG_1425.png")
    
     with open(path, "rb") as f:
         picture = discord.File(f)
