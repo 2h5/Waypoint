@@ -151,20 +151,23 @@ async def staticmap(interaction: discord.Interaction, location: str):
     
     feature = geo["features"][0]
     props = feature["properties"]
+    address = props.get("full_address", "Unknown location")
     coords = props["coordinates"]
 
     lon = coords["longitude"]
     lat = coords["latitude"]
 
     base_url = 'https://api.mapbox.com/styles/v1/mapbox/streets-v12/static'
+    overlay = f"pin-s+ff0000({lon},{lat})" #adding a red pin
     size = "600x400"
-    url = f"{base_url}/{lon},{lat},13,0/{size}?access_token={token}"
+    url = f"{base_url}/{overlay}/{lon},{lat},13,0/{size}?access_token={token}"
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as resp:
             img_bytes = await resp.read()
 
     file = discord.File(io.BytesIO(img_bytes), filename="map.png")
-    await interaction.response.send_message(file=file)
+    
+    await interaction.response.send_message(content=f"📍 **{address}**", file=file)
 
     #url format v
     #https://api.mapbox.com/styles/v1/{username}/{style_id}/static/{overlay}/{lon},{lat},{zoom},{bearing},{pitch}|{auto}|{bbox}/{width}x{height}{padding}{@2x}?access_token=token
