@@ -10,6 +10,7 @@ import aiohttp
 import urllib.parse
 from dotenv import load_dotenv
 
+#hiding secrets
 load_dotenv()
 discord_token = os.getenv("DISCORD_TOKEN")
 mapbox_token = os.getenv("MAPBOX_TOKEN")
@@ -119,36 +120,40 @@ async def remindme(interaction: discord.Interaction, time: str, *, text: str):
         await interaction.followup.send(f"⏰ Reminder for {interaction.user.mention}: {text}")
         
 
-#add link to url functionalityon pause, this was a qrcode converter 
+#add link to url functionality on pause, this was a qrcode converter 
 
 
-#add map static image uploader #mapbox implementation. Type location, sends to endpoint, gives me url, parse json, upload to discord. If place is invalid, mapbox handles that and returns empty features []. 
 
+#geocode takes in location and this specific function returns the whole JSON
 async def geocode(location: str) -> str:
     token = mapbox_token
     #build url
     base_url = 'https://api.mapbox.com/search/geocode/v6/forward'
     encoded_location = urllib.parse.quote(location)
+    #final url built
     url = f"{base_url}?q={encoded_location}&access_token={token}"
 
     #opening aiohttp
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as response:
             data = await response.json()
-
+    #this returns the entire json from mapbox geocoding
     return data
 
+#post static map with location + red pin
 @tree.command(name="staticmap", description="Posts an image of inputted location")
 @app_commands.allowed_installs(guilds=True, users=True)
 @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
 async def staticmap(interaction: discord.Interaction, location: str):
     token = mapbox_token
+    #grabbing location string from user
     geo = await geocode(location)
 
+    #IF GEO IS EMPTY because location could not be found by mapbox
     if not geo["features"]:
         await interaction.response.send_message("Location not found. Try something else.")
         return
-    
+    #otherwise, grab all the good features
     feature = geo["features"][0]
     props = feature["properties"]
     address = props.get("full_address", "Unknown location")
@@ -156,29 +161,25 @@ async def staticmap(interaction: discord.Interaction, location: str):
 
     lon = coords["longitude"]
     lat = coords["latitude"]
-
+    #building url, break it into variables like this so its easier to read, easier to modify later
     base_url = 'https://api.mapbox.com/styles/v1/mapbox/streets-v12/static'
     overlay = f"pin-s+ff0000({lon},{lat})" #adding a red pin
     size = "600x400"
     url = f"{base_url}/{overlay}/{lon},{lat},13,0/{size}?access_token={token}"
+    #aiohttp
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as resp:
             img_bytes = await resp.read()
 
+    #not embedding due to discord compressing preview
     file = discord.File(io.BytesIO(img_bytes), filename="map.png")
-    
+
+    #sending the message if successful
     await interaction.response.send_message(content=f"📍 **{address}**", file=file)
 
-    #url format v
+    #url format v, actually just go into their playbox, find random location, then use the GET request
     #https://api.mapbox.com/styles/v1/{username}/{style_id}/static/{overlay}/{lon},{lat},{zoom},{bearing},{pitch}|{auto}|{bbox}/{width}x{height}{padding}{@2x}?access_token=token
 
-
-
-
-
-
-
 #add map directions from mapbox, directions here to there
-
 
 client.run(discord_token)
