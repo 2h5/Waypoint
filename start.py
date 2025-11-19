@@ -181,5 +181,17 @@ async def staticmap(interaction: discord.Interaction, location: str):
     #https://api.mapbox.com/styles/v1/{username}/{style_id}/static/{overlay}/{lon},{lat},{zoom},{bearing},{pitch}|{auto}|{bbox}/{width}x{height}{padding}{@2x}?access_token=token
 
 #add map directions from mapbox, directions here to there
+@tree.command(name="route", description="start to destination planner")
+@app_commands.allowed_installs(guilds=True, users=True)
+@app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
+async def route(interaction: discord.Interaction, start: str, end: str):
+    geo_start = await geocode(start)
+    geo_end = await geocode(end)
 
+    if not geo_start["features"] or geo_end["features"]:
+        await interaction.response.send_message("Route/location(s) not found. Try something else.")
+        return
+
+    
+    await interaction.response.send_message("Waiting..")
 client.run(discord_token)
