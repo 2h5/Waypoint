@@ -178,4 +178,4 @@ async def staticmap(interaction: discord.Interaction, location: str):
 #add map directions from mapbox, directions here to there
 
 
-    client.run(discord_token)
+client.run(discord_token)
