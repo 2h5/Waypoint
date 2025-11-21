@@ -5,7 +5,6 @@ from discord import app_commands
 
 
 def setup(tree):
-    #uploads 6 7 ¬‿¬
     @tree.command(name="sixseven", description = "6 7 uploader")
     @app_commands.allowed_installs(guilds=True, users=True)
     @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)

@@ -4,14 +4,14 @@ from datetime import datetime
 import os
 from dotenv import load_dotenv
 
-#hiding secrets
+#keys
 load_dotenv()
 discord_token = os.getenv("DISCORD_TOKEN")
 mapbox_token = os.getenv("MAPBOX_TOKEN")
 
 
 intents = discord.Intents.default()
-intents.message_content = True  #lets bot read text
+intents.message_content = True  
 client = discord.Client(intents=intents)
 tree = app_commands.CommandTree(client)
 
@@ -41,7 +41,5 @@ staticmap(tree)
 route(tree)
 translate(tree)
 remindme(tree)
-
-#add link to url functionality on pause, this was a qrcode converter 
 
 client.run(discord_token)

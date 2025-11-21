@@ -11,7 +11,11 @@ async def geocode(location: str) -> str:
     #final url built
     url = f"{base_url}?q={encoded_location}&access_token={token}"
 
-    #opening aiohttp
+    #aiohttp
+        #response.json() parses json response
+        #response.text() would get raw text
+        #response.read() would get raw bytes
+        #these comes from ahiohttp, mapbox tells us what the return is like if that returns a json, or image, etc    
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as response:
             data = await response.json()

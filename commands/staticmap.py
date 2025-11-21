@@ -34,12 +34,20 @@ def setup(tree):
         size = "600x400"
         url = f"{base_url}/{overlay}/{lon},{lat},13,0/{size}?access_token={token}"
         #aiohttp
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url) as resp:
-                img_bytes = await resp.read()
+        #response.json() parses json response
+        #response.text() would get raw text
+        #response.read() would get raw bytes
+        #these comes from ahiohttp, mapbox tells us what the return is like if that returns a json, or image, etc
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.get(url) as response:
+                    image = await response.read()
+        except Exception as e:
+            await interaction.response.send_message(f"Error retrieving map image: {e}")
+            return
 
         #not embedding due to discord compressing preview
-        file = discord.File(io.BytesIO(img_bytes), filename="map.png")
+        file = discord.File(io.BytesIO(image), filename="map.png")
 
         #sending the message if successful
         await interaction.response.send_message(content=f"📍 **{address}**", file=file)
