@@ -43,3 +43,8 @@ translate(tree)
 remindme(tree)
 
 client.run(discord_token)
+
+
+#finish route
+#open one http client on startup and reuse that per slash command
+#implement rate limiter, such as map to track time between user uses
