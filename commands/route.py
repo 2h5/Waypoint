@@ -19,7 +19,7 @@ def setup(tree):
         geo_start = await geocode(start)
         geo_end = await geocode(end)
 
-        if not geo_start["features"] or geo_end["features"]:
+        if not geo_start["features"] or not geo_end["features"]:
             await interaction.response.send_message("Route/location(s) not found. Try something else.")
             return
 
