@@ -23,7 +23,7 @@ def setup(tree):
         #otherwise, grab all the good features
         feature = geo["features"][0]
         props = feature["properties"]
-        address = props.get("full_address", "Unknown location")
+        address = props.get("full_address", "Unknown location") #.get is used if your not sure if a field exists
         coords = props["coordinates"]
 
         lon = coords["longitude"]
