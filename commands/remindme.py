@@ -10,11 +10,10 @@ def setup(tree):
     @app_commands.allowed_installs(guilds=True, users=True)
     @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
     async def remindme(interaction: discord.Interaction, time: str, *, text: str):
-        """
-        Example:
-        /remindme time: 10m text: take out the trash
-        Supported units: s (seconds), m (minutes), h (hours)
-        """
+       
+        # /remindme time: 10m text: take out the trash
+        # Supported units: s (seconds), m (minutes), h (hours)
+       
         match = re.match(r"^(\d+)([smh])$", time.lower())
         if not match:
             await interaction.response.send_message("Use format like `10m`, `2h`, or `30s`.")

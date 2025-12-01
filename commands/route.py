@@ -8,12 +8,11 @@ from utils.static_map_util import static_map_util
 from utils.format_duration import format_duration
 
 def setup(tree):
- #add map directions from mapbox, directions here to there
     @tree.command(name="route", description="start to destination planner")
     @app_commands.allowed_installs(guilds=True, users=True)
     @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
     async def route(interaction: discord.Interaction, start: str, end: str):
-        #since discord times out too quickly
+
         await interaction.response.defer()
         
         token = os.getenv("MAPBOX_TOKEN")

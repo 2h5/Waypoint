@@ -1,4 +1,5 @@
 def format_duration(minutes):
+    
     minutes = int(round(minutes))
     if minutes < 60:
         unit = "minute" if minutes == 1 else "minutes"

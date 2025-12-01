@@ -5,7 +5,7 @@ import polyline
 
 async def static_map_util(start=None, end=None, polyline_str=None, width=1280, height=720, padding=None):
     token = os.getenv("MAPBOX_TOKEN")
-    #keeping a list of all overlay options we want to add, 
+    #keep list of overlays
     overlays = [] 
     
     if start:
@@ -13,7 +13,7 @@ async def static_map_util(start=None, end=None, polyline_str=None, width=1280, h
     if end:
         overlays.append(f"pin-s+0000FF({end[0]},{end[1]})")
 #-------------------------------------------------------------------
-    #reduced polyline. Geometry characters blew up on state to state
+    #reduced polyline. Geometry characters blew up on long distances
     if polyline_str:
         try:
             coords = polyline.decode(polyline_str)

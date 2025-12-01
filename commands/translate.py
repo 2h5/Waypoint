@@ -8,10 +8,7 @@ def setup(tree):
     @app_commands.allowed_installs(guilds=True, users=True)
     @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
     async def translate(interaction: discord.Interaction, lang: str, *, text: str):
-        """
-        Example:
-        /translate lang: es text: hello
-        """
+
         now = datetime.now().strftime("%b %d, %Y %H:%M%p")
         user = interaction.user
         username = user.name
