@@ -82,6 +82,11 @@ async def poll_usps(client: discord.Client, tracking_number: str):
 
             status = parse_status(text)
 
+            
+            #test
+            print(f"Parsed status for {tracking_number}: {status}")
+            
+            
             if not status:
                 await asyncio.sleep(POLL_INTERVAL)
                 continue
