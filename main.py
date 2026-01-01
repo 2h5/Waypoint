@@ -9,6 +9,7 @@ discord_token = os.getenv("DISCORD_TOKEN")
 mapbox_token = os.getenv("MAPBOX_TOKEN")
 
 
+
 intents = discord.Intents.default()
 intents.message_content = True  
 client = discord.Client(intents=intents)
@@ -45,6 +46,8 @@ route(tree)
 translate(tree)
 remindme(tree)
 usps(tree)
+
+
 
 client.run(discord_token)
 
