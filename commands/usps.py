@@ -68,25 +68,22 @@ def setup(tree):
 
 
 async def poll_usps(client: discord.Client, tracking_number: str):
-    url = "https://tools.usps.com/go/TrackConfirmAction_input"
+    api_url = "https://tools.usps.com/UspsTrackingRestServices/rest/track/getTrackInfo"
 
     while tracking_number in active_trackers:
         try:
             async with aiohttp.ClientSession() as session:
-                async with session.get(
-                    url,
-                    params={"tLabels": tracking_number},
+                async with session.post(
+                    api_url,
+                    json={"trackingNumber": tracking_number},
                     headers={"User-Agent": "Mozilla/5.0"},
                 ) as response:
-                    text = await response.text()
+                    data = await response.json()
 
-            status = parse_status(text)
+            status = parse_status_from_json(data)
 
-            
-            #test
-            print(f"Parsed status for {tracking_number}: {status}")
-            
-            
+            print(f"[USPS DEBUG] Parsed status for {tracking_number}: {status}")
+
             if not status:
                 await asyncio.sleep(POLL_INTERVAL)
                 continue
@@ -107,12 +104,36 @@ async def poll_usps(client: discord.Client, tracking_number: str):
                     del active_trackers[tracking_number]
                     return
 
-        except Exception:
-            pass
+        except Exception as e:
+            print("[USPS ERROR]", e)
 
         await asyncio.sleep(POLL_INTERVAL)
 
+def parse_status_from_json(data: dict) -> str | None:
+    try:
+        track = data["trackResponse"]["shipment"][0]
+        event = track["packageStatus"]
 
+        status = event.get("status")
+        detail = event.get("statusDetail")
+        location = event.get("location")
+
+        if not status:
+            return None
+
+        parts = [status]
+
+        if detail:
+            parts.append(detail)
+
+        if location:
+            parts.append(f"📍 {location}")
+
+        return " — ".join(parts)
+
+    except Exception:
+        return None
+    
 def parse_status(html: str) -> str | None:
     def extract(marker: str) -> str | None:
         start = html.find(marker)
