@@ -16,7 +16,7 @@ active_trackers: dict[str, dict] = {}
 def parse_aftership_status(data: dict) -> str | None:
     meta = data.get("meta", {})
     code = meta.get("code")
-    if code not in [200, 201, 4009]:
+    if code not in [200, 201, 4009, 4003]:
         raise ValueError(f"API Error [{code}]: {meta.get('message')}")
 
     raw_data = data.get("data", {})
