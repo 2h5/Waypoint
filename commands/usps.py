@@ -13,6 +13,29 @@ active_trackers = {}
 
 
 def setup(tree):
+    @tree.command(name="tracking", description="Show USPS packages currently being tracked")
+    @app_commands.allowed_installs(guilds=True, users=True)
+    @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
+    async def tracking(interaction: discord.Interaction):
+        if not active_trackers:
+            await interaction.response.send_message(
+                "📭 No USPS packages are currently being tracked.",
+                ephemeral=True,
+            )
+            return
+
+        lines = []
+        for tn, data in active_trackers.items():
+            status = data.get("last_status") or "⏳ Waiting for first update…"
+            lines.append(f"• **{tn}**\n  {status}")
+
+        message = "📦 **Currently tracking:**\n\n" + "\n".join(lines)
+
+        await interaction.response.send_message(
+            message,
+            ephemeral=True,
+        )
+   
 
     @tree.command(name="trackusps", description="Track a USPS package and DM updates")
     @app_commands.allowed_installs(guilds=True, users=True)
@@ -115,3 +138,6 @@ def parse_status(html: str) -> str | None:
         parts.append(f"📍 {location}")
 
     return " — ".join(parts)
+
+
+    
