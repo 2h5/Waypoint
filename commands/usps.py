@@ -86,13 +86,32 @@ async def poll_usps(client: discord.Client, tracking_number: str):
 
 
 def parse_status(html: str) -> str | None:
-    """
-    Very lightweight parsing — good enough for one-off tracking.
-    """
-    marker = 'class="delivery_status">'
-    if marker not in html:
+    def extract(marker: str) -> str | None:
+        start = html.find(marker)
+        if start == -1:
+            return None
+
+        start += len(marker)
+        end = html.find("</p>", start)
+        if end == -1:
+            return None
+
+        text = html[start:end]
+        return text.replace("&nbsp;", " ").strip()
+
+    main = extract('<p class="tb-status">')
+    if not main:
         return None
 
-    start = html.find(marker) + len(marker)
-    end = html.find("</", start)
-    return html[start:end].strip()
+    detail = extract('<p class="tb-status-detail">')
+    location = extract('<p class="tb-location">')
+
+    parts = [main]
+
+    if detail:
+        parts.append(detail)
+
+    if location:
+        parts.append(f"📍 {location}")
+
+    return " — ".join(parts)
