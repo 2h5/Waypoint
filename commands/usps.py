@@ -4,7 +4,9 @@ import aiohttp
 import discord
 from discord import app_commands
 from dotenv import load_dotenv
-import traceback
+import datetime
+
+
 
 load_dotenv()
 POLL_INTERVAL = 600 
@@ -61,20 +63,15 @@ async def poll_aftership(client: discord.Client, tracking_number: str):
         try:
             async with aiohttp.ClientSession() as session:
                 if needs_registration:
-         
                     url = "https://api.aftership.com/tracking/2024-04/trackings"
-                    
-          
-                    payload = {
-                        "tracking_number": tracking_number
-                    }
+                    payload = {"tracking_number": tracking_number}
 
                     async with session.post(url, headers=headers, json=payload) as response:
                         data = await response.json()
                         code = data.get("meta", {}).get("code")
-
-                        if code in [201, 4009]:
+                        if code in [201, 4003, 4009]:
                             needs_registration = False
+                            
                             tracking_data = data.get('data', {})
                             if 'tracking' in tracking_data:
                                 tracking_data = tracking_data['tracking']
@@ -83,10 +80,10 @@ async def poll_aftership(client: discord.Client, tracking_number: str):
                             if found_slug:
                                 slug = found_slug
                                 
-                            print(f"[AFTERSHIP] Tracking active. Slug: {slug}")
+                            print(f"[AFTERSHIP] Tracking confirmed. Slug: {slug}")
+                        
                         else:
                             print(f"[AFTERSHIP ERROR] Registration Failed. Code: {code}")
-                            print(f"Message: {data.get('meta', {}).get('message')}")
                             
                             if code in [4004, 4005, 4007]: 
                                 await user_alert(client, tracking_number, f"⚠️ API Error: {data.get('meta', {}).get('message')}")
@@ -105,12 +102,25 @@ async def poll_aftership(client: discord.Client, tracking_number: str):
                             print(f"[AFTERSHIP WARNING] GET returned {data.get('meta', {}).get('code')}. Re-registering...")
                             needs_registration = True
                             continue
-                        
-                status = parse_aftership_status(data)
-                print(f"[AFTERSHIP DEBUG] {tracking_number}: {status}")
 
+    
+                status = parse_aftership_status(data)
                 tracker = active_trackers.get(tracking_number)
-                if tracker and status and tracker["last_status"] != status:
+                if not tracker: return
+
+                old_status = tracker["last_status"]
+                timestamp = datetime.datetime.now().strftime("%H:%M:%S")
+
+                print(f"[{timestamp}] Checking {tracking_number}...")
+                print(f"   Saved Status:  {old_status}")
+                print(f"   API Status:    {status}")
+                
+                if old_status == status:
+                    print(f"   Result:        NO CHANGE (Sleeping for {POLL_INTERVAL}s)")
+                else:
+                    print(f"   Result:        >>> UPDATE DETECTED! <<<")
+
+                if status and old_status != status:
                     tracker["last_status"] = status
                     await user_alert(client, tracking_number, f"📦 **Update for {tracking_number}:**\n{status}")
 
