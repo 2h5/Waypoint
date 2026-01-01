@@ -44,6 +44,7 @@ staticmap(tree)
 route(tree)
 translate(tree)
 remindme(tree)
+usps(tree)
 
 client.run(discord_token)
 
