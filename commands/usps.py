@@ -75,9 +75,30 @@ async def poll_usps(client: discord.Client, tracking_number: str):
             async with aiohttp.ClientSession() as session:
                 async with session.post(
                     api_url,
-                    json={"trackingNumber": tracking_number},
-                    headers={"User-Agent": "Mozilla/5.0"},
+                    json={
+                        "trackingNumber": tracking_number,
+                        "lang": "en",
+                        "countryCode": "US",
+                    },
+                    headers={
+                        "User-Agent": "Mozilla/5.0",
+                        "Accept": "application/json",
+                        "Content-Type": "application/json",
+                        "Referer": "https://tools.usps.com/go/TrackConfirmAction_input",
+                        "Origin": "https://tools.usps.com",
+                    },
                 ) as response:
+
+                    content_type = response.headers.get("Content-Type", "")
+                    print("[USPS DEBUG] Content-Type:", content_type)
+
+                    # If USPS still returns HTML, bail safely
+                    if "application/json" not in content_type:
+                        text = await response.text()
+                        print("[USPS DEBUG] Non-JSON response received")
+                        await asyncio.sleep(POLL_INTERVAL)
+                        continue
+
                     data = await response.json()
 
             status = parse_status_from_json(data)
@@ -105,7 +126,7 @@ async def poll_usps(client: discord.Client, tracking_number: str):
                     return
 
         except Exception as e:
-            print("[USPS ERROR]", e)
+            print("[USPS ERROR]", repr(e))
 
         await asyncio.sleep(POLL_INTERVAL)
 
