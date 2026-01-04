@@ -35,7 +35,7 @@ from commands.translate import setup as translate
 from commands.remindme import setup as remindme
 
 
-from commands.usps import setup as usps
+
 
 
 speed(tree)
