@@ -45,7 +45,6 @@ staticmap(tree)
 route(tree)
 translate(tree)
 remindme(tree)
-usps(tree)
 
 
 
