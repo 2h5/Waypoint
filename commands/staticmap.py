@@ -5,18 +5,14 @@ import aiohttp
 from discord import app_commands
 from utils.geocode import geocode
 
-
-
 def setup(tree):
     @tree.command(name="staticmap", description="Posts an image of inputted location")
     @app_commands.allowed_installs(guilds=True, users=True)
     @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
     async def staticmap(interaction: discord.Interaction, location: str):
         token = os.getenv("MAPBOX_TOKEN")
-   
         geo = await geocode(location)
-
-   
+        
         if not geo["features"]:
             await interaction.response.send_message("Location not found. Try something else.")
             return

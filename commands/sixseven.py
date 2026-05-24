@@ -2,8 +2,6 @@ import os
 import discord
 from discord import app_commands
 
-
-
 def setup(tree):
     @tree.command(name="sixseven", description = "6 7 uploader")
     @app_commands.allowed_installs(guilds=True, users=True)

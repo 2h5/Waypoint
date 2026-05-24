@@ -34,6 +34,12 @@ See `/remindme`.
 
 ---
 
+### 🌦️ Weather
+Current conditions (temp, feels-like, humidity, wind) for any location.  
+Powered by Mapbox geocoding + Open-Meteo. See `/weather`.
+
+---
+
 ## 🛠️ Commands Overview
 
 ### /route
@@ -62,6 +68,13 @@ See `/remindme`.
 **Usage:**
 ```
 /remindme 10m "Take a break"
+```
+
+### /weather
+**Description:** Current weather for a location  
+**Usage:**
+```
+/weather "Tokyo"
 ```
 
 ---

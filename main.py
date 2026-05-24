@@ -11,6 +11,7 @@ from commands.staticmap import setup as staticmap
 from commands.route import setup as route
 from commands.translate import setup as translate
 from commands.remindme import setup as remindme
+from commands.weather import setup as weather
 
 load_dotenv()
 discord_token = os.getenv("DISCORD_TOKEN")
@@ -39,6 +40,7 @@ staticmap(tree)
 route(tree)
 translate(tree)
 remindme(tree)
+weather(tree)
 
 client.run(discord_token)
 
