@@ -19,12 +19,12 @@ def setup(tree):
         geo_start = await geocode(start)
         geo_end = await geocode(end)
         
-        start_name = geo_start["features"][0]["properties"].get("name_preferred", start)
-        end_name = geo_end["features"][0]["properties"].get("name_preferred", end)
-        
         if not geo_start["features"] or not geo_end["features"]:
             await interaction.followup.send("Location(s) not found. Try something else.")
             return
+        
+        start_name = geo_start["features"][0]["properties"].get("name_preferred", start)
+        end_name = geo_end["features"][0]["properties"].get("name_preferred", end)
         
         start_point = geo_start["features"][0]["geometry"]["coordinates"]
         end_point = geo_end["features"][0]["geometry"]["coordinates"]
